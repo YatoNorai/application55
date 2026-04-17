@@ -18,8 +18,18 @@ jobs:
           distribution: temurin
           java-version: '17'
       - run: npm install
+      - name: Generate android/ if missing (Expo managed workflow)
+        run: |
+          if [ ! -d "android" ]; then
+            echo "android/ not found — running expo prebuild..."
+            npx expo prebuild --platform android --no-install || {
+              echo "expo prebuild failed — android/ is required to build"
+              exit 1
+            }
+          fi
       - name: Configure Android SDK path
         run: |
+          mkdir -p android
           echo "sdk.dir=$ANDROID_HOME" > android/local.properties
           sed -i '/android\.aapt2FromMavenOverride/d' android/gradle.properties 2>/dev/null || true
           sed -i '/android\.aapt2FromMavenOverride/d' android/app/build.gradle 2>/dev/null || true
