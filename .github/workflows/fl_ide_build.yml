@@ -5,6 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      GRADLE_OPTS: "-Xmx4096m -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8"
+      JAVA_OPTS: "-Xmx4096m"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
